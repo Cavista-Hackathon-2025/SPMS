@@ -1,6 +1,6 @@
 import express from 'express'
 import tryCatch from '../utils/tryCatch.js'
-import { createMedicalPractitioner } from '../controllers/medicalPracticionerController.js'
+import { createMedicalPractitioner, loginMedicalPractitioner } from '../controllers/medicalPracticionerController.js'
 
 const router = express.Router()
 // router.use(express.json())
@@ -8,12 +8,15 @@ const router = express.Router()
 router.post('/register', 
   tryCatch(async (req, res) => {
   console.log(req.body)
-  const registerMedicalPracticioner = await createMedicalPractitioner(req.body)
-  res.status(registerMedicalPracticioner.statusCode).send(registerMedicalPracticioner)
+  const registerMedicalPracticioners = await createMedicalPractitioner(req.body)
+  res.status(registerMedicalPracticioners.statusCode).send(registerMedicalPracticioners)
 }))
 
-router.get('/login', (req, res) => {
-
-})
+router.post('/login',
+  tryCatch(async (req, res) => {
+  console.log(req.body)
+  const loginMedicalPractitioners = await loginMedicalPractitioner(req.body)
+  res.status(loginMedicalPractitioners.statusCode).send(loginMedicalPractitioners)
+}))
 
 export default router;
