@@ -1,5 +1,6 @@
 import sequelize from "../utils/sequelize.js";
 import { Model, DataTypes } from "sequelize";
+import { ulid } from "ulid";
 
 class Patient extends Model {}
 
