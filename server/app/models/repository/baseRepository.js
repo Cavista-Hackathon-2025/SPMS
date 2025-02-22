@@ -31,7 +31,7 @@ export default class BaseRepository {
         JSON.stringify(errorHelper.returnErrorLog(err))
       );
       throw new CustomError(
-        'Could not create model',
+        err.message,
         HttpStatus.INTERNAL_SERVER_ERROR.code,
         HttpStatus.INTERNAL_SERVER_ERROR.status
       );
