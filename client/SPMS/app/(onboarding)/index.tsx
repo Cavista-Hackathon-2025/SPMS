@@ -1,7 +1,6 @@
-import { View, Text, Button } from 'react-native'
+import { View, TextInput, Button } from 'react-native'
 import React from 'react'
 import { router } from 'expo-router'
-import { TextInput } from 'react-native-gesture-handler'
 
 const index = () => {
   return (
