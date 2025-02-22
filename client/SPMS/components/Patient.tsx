@@ -25,14 +25,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    borderBottomWidth: 0.2,
-    paddingVertical: 10
+    // borderBottomWidth: 0.2,
+    backgroundColor: "#D1D4D3",
+    // paddingVertical: 10,
+    padding: 15,
+    borderRadius: 10,
   },
   profilePic: {
     marginRight: 10,
     width: 30,
     height: 30,
-    backgroundColor: "#D1D4D3",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: "50%",
   },
 });

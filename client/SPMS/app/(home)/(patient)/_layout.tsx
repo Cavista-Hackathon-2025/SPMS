@@ -7,10 +7,10 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Tabs>
+    <Tabs screenOptions={{headerShown: false}}>
       <Tabs.Screen name="vitals"/>
-      <Tabs.Screen name="patient"/>
       <Tabs.Screen name="ai_response"/>
+      <Tabs.Screen name="profile"/>
     </Tabs>
   );
 }

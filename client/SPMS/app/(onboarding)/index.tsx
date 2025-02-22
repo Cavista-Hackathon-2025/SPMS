@@ -9,7 +9,7 @@ const index = () => {
         <TextInput />
         <TextInput />
       </View>
-      <Button title="Go to Auth" onPress={() => router.navigate('/(auth)')} />
+      <Button title="Go to Auth" onPress={() => router.navigate('/(auth)/login')} />
     </View>
   )
 }
