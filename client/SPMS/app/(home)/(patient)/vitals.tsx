@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import React from "react";
 import { useLocalSearchParams } from "expo-router";
+import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 const vitals = () => {
   const { id } = useLocalSearchParams();
   //   console.log(id);
