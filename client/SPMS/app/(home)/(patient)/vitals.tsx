@@ -1,10 +1,49 @@
-import Bluetooth from "@/components/ui/Bluetooth";
 import UsbSerial from "@/components/ui/UsbSerial";
-import { useLocalSearchParams } from "expo-router";
-import React from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import axios from "axios";
 const vitals = () => {
   const { id } = useLocalSearchParams();
+
+  const [temperature, setTemperature] = useState("");
+  const [heartBeat, setHeartBeat] = useState("");
+
+  async function recieveData(userId = "ad3bf32b-9f75-4f7c-bcb9-bcaef5c1733f") {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/fetchVital",
+        {
+          userId,
+        }
+      );
+      // const {temperature, heartbeat}: {} = response;
+      setTemperature(response.data.temperature);
+      setHeartBeat(response.data.heartBeat); // ✅ Corrected
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function readVitals(userId: string, chat: string) {
+    try {
+      axios.post("http://localhost:3000/api/v1/start", {
+        userId,
+        chat,
+      });
+      router.push("/(home)/(patient)/ai_response");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    const interval = setInterval(() => {
+      recieveData();
+    }, 3000);
+    return () => clearInterval(interval); // ✅ Cleanup
+  }, []);
+  
+
   //   console.log(id);
   return (
     <View style={styles.container}>
@@ -22,7 +61,7 @@ const vitals = () => {
             <Text
               style={{ fontWeight: "bold", textAlign: "center", fontSize: 20 }}
             >
-              100 <Text>Bps</Text>
+              {heartBeat} <Text>BPM</Text>
             </Text>
           </View>
           <View style={styles.col}>
@@ -33,7 +72,7 @@ const vitals = () => {
             <Text
               style={{ fontWeight: "bold", textAlign: "center", fontSize: 20 }}
             >
-              200 <Text>C</Text>
+              {temperature} <Text>°C</Text>
             </Text>
           </View>
         </View>
@@ -55,14 +94,21 @@ const vitals = () => {
             </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          onPress={() =>
+            readVitals(
+              "ad3bf32b-9f75-4f7c-bcb9-bcaef5c1733f",
+              `My body temperature is ${temperature}°C, and my heart rate is ${heartBeat} BPM. Based on medical standards, is this normal or concerning? Please provide a detailed evaluation with possible causes and recommendations.`
+            )
+          }
+          style={styles.button}
+        >
           <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>
             Review Vitals
           </Text>
         </TouchableOpacity>
       </View>
-            <UsbSerial />
-      
+      {/* <UsbSerial /> */}
     </View>
   );
 };
@@ -76,7 +122,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     // backgroundColor: "#D1D4D3",
-    borderBottomWidth: 0.3
+    borderBottomWidth: 0.3,
   },
   profilePic: {
     marginRight: 10,

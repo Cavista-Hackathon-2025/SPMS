@@ -5,6 +5,7 @@ import HttpStatus from "../utils/http.js"
 import Response from "../domain/Response.js"
 import Chat  from "../models/chatModel.js"
 import { GoogleGenerativeAI } from "@google/generative-ai"
+import axios from "axios"
 
 config()
 
@@ -111,4 +112,13 @@ export const aiController = async (data) => {
   const httpStatus = HttpStatus.BAD_REQUEST.status
   const httpCode = HttpStatus.BAD_REQUEST.code
   return new Response(httpCode, httpStatus, message, startAiChat)
+}
+
+export async function fetchVitalData() {
+  try {
+    const response = await axios.get("http://192.168.53.198:5000/vital");
+    return response.data; // ✅ Fix: Return response.data (not response.data.data)
+  } catch (err) {
+    return { error: "Failed to fetch vitals", details: err };
+  }
 }
