@@ -1,7 +1,7 @@
 import express from 'express'
 import tryCatch from '../utils/tryCatch.js'
 import { createUser, loginUser } from '../controllers/userController.js'
-import { aiController } from '../controllers/aiController.js'
+import { aiController, fetchVitalData } from '../controllers/aiController.js'
 // import { createPatientData } from '../controllers/patientController.js'
 
 const router = express.Router()
@@ -27,6 +27,14 @@ router.post('/start',
     const startChat = await aiController(req.body)
     res.status(startChat.statusCode).send(startChat)
   }))
+router.post('/fetchVital', 
+  tryCatch(async (req, res) => {
+    console.log(req.body)
+    const recieveVitalData = await fetchVitalData(req.body)
+    res.status(recieveVitalData.statusCode).send(recieveVitalData)
+  }))
+
+
 // router.post('/patient/create',
 //   tryCatch(async (req, res) => {
 //   console.log(req.data)

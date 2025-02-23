@@ -18,6 +18,15 @@ except Exception as e:
 def index():
     return "Flask Server Running!"
 
+@app.route("/vital", methods=["GET"])
+def get_vital():
+    if arduino and arduino.in_waiting > 0:
+        data = arduino.readline().decode("utf-8").strip()
+        if "," in data:
+            temperature, heartBeat = data.split(",")
+            return {"temperature": temperature, "heartBeat": heartBeat}, 200
+    return {"error": "No data available"}, 500
+
 def read_from_arduino():
     while True:
         try:
