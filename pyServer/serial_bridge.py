@@ -3,7 +3,7 @@ from flask_socketio import SocketIO
 import serial
 import time
 
-app = Flask(__name__)
+app = Flask(_name_)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # ✅ Attempt to connect to the Arduino
@@ -27,11 +27,11 @@ def read_from_arduino():
                     print(f"📡 Sending Data: {data}")
                     socketio.emit("sensor_data", data, broadcast=True)  # ✅ Emit immediately
                 else:
-                    print("⚠️ Malformed data:", data)
+                    print("⚠ Malformed data:", data)
         except Exception as e:
             print(f"❌ Error reading from Arduino: {e}")
             time.sleep(5)  # Wait before retrying
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     socketio.start_background_task(read_from_arduino)
     socketio.run(app, host="0.0.0.0", port=5000, debug=True)
