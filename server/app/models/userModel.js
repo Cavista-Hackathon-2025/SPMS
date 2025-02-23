@@ -1,9 +1,9 @@
 import sequelize from "../utils/sequelize.js";
 import { Model, DataTypes } from "sequelize";
 
-class MedicalPractitioner extends Model {}
+class User extends Model {}
 
-MedicalPractitioner.init({
+User.init({
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -50,9 +50,9 @@ MedicalPractitioner.init({
 },
   {
     sequelize,
-    modelName: "medicalpractitioner",
+    modelName: "User",
   }
 );
 
-MedicalPractitioner.sync();
-export default MedicalPractitioner;
+User.sync();
+export default User;

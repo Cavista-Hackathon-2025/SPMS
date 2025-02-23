@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs"
 import Response from "../domain/Response.js"
-import MedicalPractitionerRepository from "../models/repository/medicalPractitionerRepository.js"
+import UserRepository from "../models/repository/userRepository.js"
 import HttpStatus from "../utils/http.js"
 
-export const createMedicalPractitioner = async (data) => {
+export const createUser = async (data) => {
   console.log(data)
 
   const filteredData = {
@@ -17,7 +17,7 @@ export const createMedicalPractitioner = async (data) => {
   }
 
   // chacks if email Exists
-  const emailCheck = await MedicalPractitionerRepository.readMedicalPractitionerByEmail(filteredData.email)
+  const emailCheck = await UserRepository.readUserByEmail(filteredData.email)
   if(emailCheck) {
     const message = "Email Exists!!!"
     const httpStatus = HttpStatus.BAD_REQUEST.status
@@ -26,14 +26,14 @@ export const createMedicalPractitioner = async (data) => {
   }
   
   // If email Doesn't Exist create A Medical Practicioner
-  const createUser = await MedicalPractitionerRepository.createMedicalPractitionerData(filteredData)
+  const createUser = await UserRepository.createUserData(filteredData)
   const message = "Medical Practicioner Created Successfully !!!"
   const httpStatus = HttpStatus.CREATED.status
   const httpCode = HttpStatus.CREATED.code
   return new Response(httpCode, httpStatus, message, createUser )
 }
 
-export const loginMedicalPractitioner = async (data) => {
+export const loginUser = async (data) => {
   // Filtering Checks
   const filteredData = {
     email: data?.email,
@@ -41,7 +41,7 @@ export const loginMedicalPractitioner = async (data) => {
   }
   
   //Checks if the user Exists by Email
-  const emailCheck = await MedicalPractitionerRepository.readMedicalPractitionerByEmail(filteredData.email)
+  const emailCheck = await UserRepository.readUserByEmail(filteredData.email)
   if(!emailCheck) {
     const message = "Email doesn't Exists. Please signUp !!!"
     const httpStatus = HttpStatus.BAD_REQUEST.status
@@ -59,8 +59,8 @@ export const loginMedicalPractitioner = async (data) => {
   }
   console.log("Password Check: ",passwordCheck)
   const message = "Login Successfully !!!"
-  const httpStatus = HttpStatus.CREATED.status
-  const httpCode = HttpStatus.CREATED.code
+  const httpStatus = HttpStatus.OK.status
+  const httpCode = HttpStatus.OK.code
   return new Response(httpCode, httpStatus, message, emailCheck )
 }
 

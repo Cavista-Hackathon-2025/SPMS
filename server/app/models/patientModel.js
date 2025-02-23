@@ -12,9 +12,8 @@ Patient.init({
     primaryKey: true,
   },
   patientId: {
-    type: DataTypes.STRING(26),
+    type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: () => ulid()
   },
   firstname: {
     type: DataTypes.STRING,
@@ -31,15 +30,6 @@ Patient.init({
   mobile_no: {
     type: DataTypes.STRING,
     allowNull: false,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  verified: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false,
   }
 },
   {
