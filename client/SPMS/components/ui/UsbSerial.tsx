@@ -1,48 +1,61 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button } from "react-native";
-import UsbSerialPort from "react-native-usb-serialport";
+import { View, Text } from "react-native";
+import SocketIOClient from "socket.io-client";
 
-const UsbSerial: React.FC = () => {
-  const [temperature, setTemperature] = useState<string | null>(null);
-  const [humidity, setHumidity] = useState<string | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
-
-  useEffect(() => {
-    connectToUsb();
-  }, []);
-
-  const connectToUsb = async () => {
-    try {
-      const devices = await UsbSerialPort.list();
-      if (devices.length === 0) {
-        console.error("No USB devices found");
-        return;
-      }
-
-      const device = devices[0]; // Pick first detected device
-      await UsbSerialPort.open(device.deviceId, 9600); // Open USB Serial connection
-      setIsConnected(true);
-      console.log("Connected to USB Serial");
-
-      UsbSerialPort.onData((data: string) => {
-        console.log("Received:", data);
-        const [temp, hum] = data.trim().split(",");
-        setTemperature(temp);
-        setHumidity(hum);
-      });
-    } catch (error) {
-      console.error("USB Connection Error:", error);
-    }
+const socket = io("http://192.168.53.198:5000", {
+    transports: ["websocket"],
+    forceNew: true,
+  });
+  
+  const SensorData: React.FC = () => {
+    const [temperature, setTemperature] = useState<string | null>(null);
+    const [humidity, setHumidity] = useState<string | null>(null);
+  
+    useEffect(() => {
+      const handleData = (data: any) => {
+        console.log("📡 Received from Python:", data);
+  
+        if (!data || typeof data !== "string") {
+          console.error("⚠️ Invalid data received:", data);
+          return;
+        }
+  
+        const parts = data.split(",");
+        if (parts.length !== 2) {
+          console.error("⚠️ Malformed data:", data);
+          return;
+        }
+  
+        setTemperature(parts[0].trim());
+        setHumidity(parts[1].trim());
+      };
+  
+      socket.on("sensor_data", handleData);
+  
+      return () => {
+        socket.off("sensor_data", handleData);
+      };
+    }, []);
+  
+    useEffect(() => {
+      socket.on("connect", () => console.log("✅ Connected to server!"));
+      socket.on("disconnect", () => console.log("❌ Disconnected from server"));
+      socket.on("connect_error", (err) => console.log("⚠️ Connection error:", err));
+  
+      return () => {
+        socket.off("connect");
+        socket.off("disconnect");
+        socket.off("connect_error");
+      };
+    }, []);
+  
+    return (
+      <View>
+        <Text>🌡️ Temperature: {temperature ? `${temperature}°C` : "No Data"}</Text>
+        <Text>💧 Humidity: {humidity ? `${humidity}%` : "No Data"}</Text>
+      </View>
+    );
   };
-
-  return (
-    <View>
-      <Text>Temperature: {temperature ? `${temperature}°C` : "No Data"}</Text>
-      <Text>Humidity: {humidity ? `${humidity}%` : "No Data"}</Text>
-      <Text>Status: {isConnected ? "Connected" : "Disconnected"}</Text>
-      <Button title="Reconnect" onPress={connectToUsb} />
-    </View>
-  );
-};
-
-export default UsbSerial;
+  
+  export default SensorData;
+  

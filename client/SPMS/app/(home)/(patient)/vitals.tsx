@@ -1,3 +1,5 @@
+import Bluetooth from "@/components/ui/Bluetooth";
+import UsbSerial from "@/components/ui/UsbSerial";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -59,6 +61,8 @@ const vitals = () => {
           </Text>
         </TouchableOpacity>
       </View>
+            <UsbSerial />
+      
     </View>
   );
 };
